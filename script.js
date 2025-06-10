@@ -291,11 +291,22 @@ const quizQuestions = [
 let currentQuestionIndex = 0;
 let score = 0;
 let answersDisabled = false;
+let selectedQuestions = [];
 
-totalQuestionsSpan.textContent = quizQuestions.length;
-maxScoreSpan.textContent = quizQuestions.length;
+const QUESTIONS_PER_QUIZ = 5;
 
-// exent listeners
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+totalQuestionsSpan.textContent = QUESTIONS_PER_QUIZ;
+maxScoreSpan.textContent = QUESTIONS_PER_QUIZ;
+
+// event listeners
 startButton.addEventListener("click", startQuiz);
 restartButton.addEventListener("click", restartQuiz);
 
@@ -304,6 +315,12 @@ function startQuiz() {
   currentQuestionIndex = 0;
   score = 0;
   scoreSpan.textContent = score;
+
+  // Select 5 random questions
+  selectedQuestions = shuffleArray([...quizQuestions]).slice(
+    0,
+    QUESTIONS_PER_QUIZ
+  );
 
   startScreen.classList.remove("active");
   quizScreen.classList.add("active");
@@ -315,10 +332,10 @@ function showQuestion() {
   // reset state
   answersDisabled = false;
 
-  const currentQuestion = quizQuestions[currentQuestionIndex];
+  const currentQuestion = selectedQuestions[currentQuestionIndex];
   currentQuestionSpan.textContent = currentQuestionIndex + 1;
 
-  const progressPercent = (currentQuestionIndex / quizQuestions.length) * 100;
+  const progressPercent = (currentQuestionIndex / QUESTIONS_PER_QUIZ) * 100;
   progressBar.style.width = progressPercent + "%";
 
   questionText.textContent = currentQuestion.question;
@@ -362,7 +379,7 @@ function selectAnswer(event) {
     currentQuestionIndex++;
 
     // check if quiz is over or more questions
-    if (currentQuestionIndex < quizQuestions.length) {
+    if (currentQuestionIndex < QUESTIONS_PER_QUIZ) {
       showQuestion();
     } else {
       showResults();
@@ -376,7 +393,7 @@ function showResults() {
 
   finalScoreSpan.textContent = score;
 
-  const percentage = (score / quizQuestions.length) * 100;
+  const percentage = (score / QUESTIONS_PER_QUIZ) * 100;
 
   if (percentage === 100) {
     resultMessage.textContent = "Perfect! You're a genius!";
