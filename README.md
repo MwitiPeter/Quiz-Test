@@ -26,4 +26,4 @@ A simple and interactive quiz game built with HTML, CSS, and JavaScript. Test yo
 
 ## License
 
-MIT License 
+MIT License
